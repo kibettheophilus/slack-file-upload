@@ -10,7 +10,9 @@ This action will help you upload artifact from GitHub to Slack.
 
 ## Outputs
 
-[WIP]
+### `success`
+
+Prints success once file is uploaded.
 
 ## Example usage
 
