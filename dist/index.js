@@ -28475,10 +28475,11 @@ const axios_1 = __importDefault(__nccwpck_require__(8757));
 async function run() {
     try {
         const uploadFile = core.getInput('file');
+        const token = core.getInput('token');
         if (!uploadFile) {
             core.setFailed('You must provide `file` in your configuration');
         }
-        getUploadUrl();
+        getUploadUrl(token);
         core.setOutput('success', 'File uploaded to channelName');
         console.log('Filed uploaded successfully');
     }
@@ -28488,9 +28489,14 @@ async function run() {
             core.setFailed(error.message);
     }
 }
-async function getUploadUrl() {
+async function getUploadUrl(token) {
     try {
-        const response = await axios_1.default.get('https://jsonplaceholder.typicode.com/posts');
+        const response = await axios_1.default.get('https://slack.com/api/files.getUploadURLExternal', {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ${token}'
+            }
+        });
         console.log(response.data);
     }
     catch (error) {

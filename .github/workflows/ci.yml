@@ -51,6 +51,7 @@ jobs:
         uses: ./
         with:
           file: 'artifact/to/upload'
+          token: 'your-token'
 
       - name: Print Output
         id: output
