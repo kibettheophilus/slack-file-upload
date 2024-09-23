@@ -1,4 +1,4 @@
-name: 'Slack File Upload'
+name: 'Slack File Upload Action'
 description: 'An action to upload artifact to Slack.'
 author: 'kibettheophilus'
 
