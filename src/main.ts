@@ -8,12 +8,13 @@ import axios from 'axios'
 export async function run(): Promise<void> {
   try {
     const uploadFile = core.getInput('file')
+    const token = core.getInput('token')
 
     if (!uploadFile) {
       core.setFailed('You must provide `file` in your configuration')
     }
 
-    getUploadUrl()
+    getUploadUrl(token)
 
     core.setOutput('success', 'File uploaded to channelName')
     console.log('Filed uploaded successfully')
@@ -23,10 +24,16 @@ export async function run(): Promise<void> {
   }
 }
 
-async function getUploadUrl() {
+async function getUploadUrl(token: String) {
   try {
     const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts'
+      'https://slack.com/api/files.getUploadURLExternal',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ${token}'
+        }
+      }
     )
     console.log(response.data)
   } catch (error) {

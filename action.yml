@@ -10,6 +10,9 @@ inputs:
   file:
     description: 'Artifact file to be uploaded to Slack'
     required: true
+  token:
+    description: 'Slack token'
+    required: true
 
 outputs:
   success:
