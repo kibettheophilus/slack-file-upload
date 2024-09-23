@@ -1,3 +1,5 @@
+⚠️ The action is not ready for use.
+
 # Upload Files to Slack action
 
 This action will help you upload artifact from GitHub to Slack.
