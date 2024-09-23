@@ -11,7 +11,7 @@ export async function run(): Promise<void> {
     if (!uploadFile) {
       core.setFailed('You must provide `file` in your configuration')
     }
-    core.setOuput('success', 'File uploaded to channelName')
+    core.setOutput('success', 'File uploaded to channelName')
     console.log('Filed uploaded successfully')
   } catch (error) {
     // Fail the workflow run if an error occurs
