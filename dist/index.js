@@ -28491,7 +28491,7 @@ async function run() {
 async function getUploadUrl() {
     try {
         const response = await axios_1.default.get('https://jsonplaceholder.typicode.com/posts');
-        console.log(response);
+        console.log(response.data);
     }
     catch (error) {
         console.log('Error fetching url:', error);
