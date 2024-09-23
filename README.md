@@ -8,8 +8,6 @@ This action will help you upload artifact from GitHub to Slack.
 
 **Required** The artifact to upload.
 
-[WIP]
-
 ## Outputs
 
 [WIP]
