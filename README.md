@@ -19,7 +19,7 @@ Prints success once file is uploaded.
 ## Example usage
 
 ```yaml
-uses: kibettheophilus/@v0.1-alpha
+uses: kibettheophilus/@v0.1.1
 with:
   file: 'artifact/to/upload'
 ```
