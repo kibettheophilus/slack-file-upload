@@ -25,14 +25,14 @@ export async function run(): Promise<void> {
   }
 }
 
-async function getUploadUrl(token: String, fileName: String) {
+async function getUploadUrl(token: string, fileName: string) {
   try {
     const response = await axios.get(
       'https://slack.com/api/files.getUploadURLExternal',
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ${token}'
+          Authorization: `Bearer ${token}`
         },
         params: {
           filename: fileName,

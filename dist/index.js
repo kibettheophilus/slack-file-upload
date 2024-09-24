@@ -28495,7 +28495,7 @@ async function getUploadUrl(token, fileName) {
         const response = await axios_1.default.get('https://slack.com/api/files.getUploadURLExternal', {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ${token}'
+                Authorization: `Bearer ${token}`
             },
             params: {
                 filename: fileName,
