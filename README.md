@@ -36,7 +36,7 @@ Prints success once file is uploaded.
 ## Example usage
 
 ```yaml
-uses: kibettheophilus/slack-file-upload@v0.1.1
+uses: kibettheophilus/slack-file-upload@main
 with:
   file: 'artifact/to/upload.pdf'
   token: ${{ secrets.SLACK_TOKEN }}
