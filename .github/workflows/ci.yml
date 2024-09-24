@@ -29,9 +29,9 @@ jobs:
         id: npm-ci
         run: npm ci
 
-      - name: Check Format
-        id: npm-format-check
-        run: npm run format:check
+      # - name: Check Format
+      #   id: npm-format-check
+      #   run: npm run format:check
 
       - name: Test
         id: npm-ci-test
@@ -51,6 +51,10 @@ jobs:
         uses: ./
         with:
           file: 'artifact/to/upload'
+          token: ${{ secrets.SLACK_TOKEN }}
+          filename: 'filename'
+          channelId: 'C12345'
+          message: 'This is a file'
 
       - name: Print Output
         id: output

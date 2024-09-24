@@ -7,9 +7,21 @@ branding:
   color: 'blue'
 
 inputs:
+  token:
+    description: 'Slack token'
+    required: true
   file:
     description: 'Artifact file to be uploaded to Slack'
     required: true
+  filename:
+    description: 'Name of the artifact to be uploaded'
+    required: true
+  channelId:
+    description: 'Channel ID where the file will be shared'
+    required: false
+  message:
+    description: 'The message text introducing the file in specified channels'
+    required: false
 
 outputs:
   success:
