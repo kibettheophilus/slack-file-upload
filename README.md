@@ -1,5 +1,5 @@
-> [!Caution] The action is still in active development and not ready for use,
-> consider watching to receive updates on the progress.
+> [!Caution]
+> The action is still in active development and not ready for use, consider watching to receive updates on the progress.
 
 # Upload Files to Slack action
 
