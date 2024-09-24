@@ -28511,7 +28511,7 @@ async function getUploadUrl(token, fileName, file) {
     }
     catch (error) {
         if (error instanceof Error)
-            core.setFailed(error.message);
+            core.setFailed(error);
     }
 }
 async function uploadFile(input, fileName, token, file) {
@@ -28527,7 +28527,7 @@ async function uploadFile(input, fileName, token, file) {
     }
     catch (error) {
         if (error instanceof Error)
-            core.setFailed(error.message);
+            core.setFailed(error);
     }
 }
 

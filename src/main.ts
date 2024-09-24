@@ -48,7 +48,7 @@ async function getUploadUrl(token: string, fileName: string, file: string) {
     await uploadFile(response.data, fileName, token, file)
     console.log(response.data)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) core.setFailed(error)
   }
 }
 
@@ -70,7 +70,7 @@ async function uploadFile(
     })
     console.log(response.data)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) core.setFailed(error)
   }
 }
 
