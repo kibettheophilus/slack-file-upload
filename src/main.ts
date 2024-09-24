@@ -9,12 +9,13 @@ export async function run(): Promise<void> {
   try {
     const uploadFile = core.getInput('file')
     const token = core.getInput('token')
+    const fileName = core.getInput('filename')
 
     if (!uploadFile) {
       core.setFailed('You must provide `file` in your configuration')
     }
 
-    getUploadUrl(token)
+    getUploadUrl(token, fileName)
 
     core.setOutput('success', 'File uploaded to channelName')
     console.log('Filed uploaded successfully')
@@ -24,7 +25,7 @@ export async function run(): Promise<void> {
   }
 }
 
-async function getUploadUrl(token: String) {
+async function getUploadUrl(token: String, fileName: String) {
   try {
     const response = await axios.get(
       'https://slack.com/api/files.getUploadURLExternal',
@@ -32,6 +33,10 @@ async function getUploadUrl(token: String) {
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ${token}'
+        },
+        params: {
+          filename: fileName,
+          length: 53072
         }
       }
     )
