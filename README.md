@@ -40,4 +40,7 @@ uses: kibettheophilus/slack-file-upload@v0.1.1
 with:
   file: 'artifact/to/upload.pdf'
   token: ${{ secrets.SLACK_TOKEN }}
+  filename: 'filename'
+  channelId: 'C12345'
+  message: 'This is a file'
 ```
