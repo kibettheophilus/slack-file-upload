@@ -28480,17 +28480,21 @@ async function run() {
         if (!uploadFile) {
             core.setFailed('You must provide `file` in your configuration');
         }
-        getUploadUrl(token, fileName);
-        core.setOutput('success', 'File uploaded to channelName');
+        if (!token) {
+            core.setFailed('You must provide `token` in your configuration');
+        }
+        if (!fileName) {
+            core.setFailed('You must provide `filename` in your configuration');
+        }
+        getUploadUrl(token, fileName, uploadFile);
         console.log('Filed uploaded successfully');
     }
     catch (error) {
-        // Fail the workflow run if an error occurs
         if (error instanceof Error)
             core.setFailed(error.message);
     }
 }
-async function getUploadUrl(token, fileName) {
+async function getUploadUrl(token, fileName, file) {
     try {
         const response = await axios_1.default.get('https://slack.com/api/files.getUploadURLExternal', {
             headers: {
@@ -28502,10 +28506,28 @@ async function getUploadUrl(token, fileName) {
                 length: 53072
             }
         });
+        uploadFile(response.data, fileName, token, file);
         console.log(response.data);
     }
     catch (error) {
-        console.log('Error fetching url:', error);
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
+}
+async function uploadFile(input, fileName, token, file) {
+    try {
+        const formData = new FormData();
+        formData.append(fileName, file);
+        const response = await axios_1.default.post(input.upload_url, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log(response.data);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
     }
 }
 
