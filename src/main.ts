@@ -21,7 +21,7 @@ export async function run(): Promise<void> {
       core.setFailed('You must provide `filename` in your configuration')
     }
 
-    getUploadUrl(token, fileName, uploadFile)
+    await getUploadUrl(token, fileName, uploadFile)
 
     console.log('Filed uploaded successfully')
   } catch (error) {
@@ -45,7 +45,7 @@ async function getUploadUrl(token: string, fileName: string, file: string) {
       }
     )
 
-    uploadFile(response.data, fileName, token, file)
+    await uploadFile(response.data, fileName, token, file)
     console.log(response.data)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)

@@ -28486,7 +28486,7 @@ async function run() {
         if (!fileName) {
             core.setFailed('You must provide `filename` in your configuration');
         }
-        getUploadUrl(token, fileName, uploadFile);
+        await getUploadUrl(token, fileName, uploadFile);
         console.log('Filed uploaded successfully');
     }
     catch (error) {
@@ -28506,7 +28506,7 @@ async function getUploadUrl(token, fileName, file) {
                 length: 53072
             }
         });
-        uploadFile(response.data, fileName, token, file);
+        await uploadFile(response.data, fileName, token, file);
         console.log(response.data);
     }
     catch (error) {
