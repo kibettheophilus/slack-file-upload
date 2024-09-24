@@ -44,8 +44,9 @@ async function getUploadUrl(token: string, fileName: string, file: string) {
         }
       }
     )
-    console.log(response.data)
+
     uploadFile(response.data, fileName, token, file)
+    console.log(response.data)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
