@@ -16,7 +16,7 @@ inputs:
   filename:
     description: 'Name of the artifact to be uploaded'
     required: true
-  channelName:
+  channelId:
     description: 'Channel ID where the file will be shared'
     required: false
   message:
