@@ -28529,7 +28529,7 @@ async function uploadFile(input, fileName, token) {
     }
     catch (error) {
         if (error instanceof Error)
-            core.setFailed(error);
+            core.setFailed(error.message);
     }
 }
 
