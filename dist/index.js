@@ -28469,6 +28469,7 @@ exports.run = run;
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const fs = __importStar(__nccwpck_require__(7147));
+const form_data_1 = __importDefault(__nccwpck_require__(4334));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -28515,7 +28516,7 @@ async function getUploadUrl(token, fileName) {
 }
 async function uploadFile(input, fileName, token) {
     try {
-        const formData = new FormData();
+        const formData = new form_data_1.default();
         const file = core.getInput('file');
         const fileStream = fs.createReadStream(file);
         formData.append('file', fileStream);

@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import axios, { AxiosResponse } from 'axios'
 import * as fs from 'fs'
+import FormData from 'form-data'
 
 /**
  * The main function for the action.
