@@ -28526,7 +28526,7 @@ async function uploadFile(input, fileName, token) {
         console.log(fileStream);
         const response = await axios_1.default.post(input.upload_url, formData, {
             headers: {
-                'Content Type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`
             }
         });
