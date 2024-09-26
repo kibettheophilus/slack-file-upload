@@ -74,7 +74,7 @@ async function uploadFile(
         Authorization: `Bearer ${token}`
       }
     })
-    console.log(response.data)
+    // console.log(response.data)
     await completeUpload(input.file_id)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
