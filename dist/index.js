@@ -28520,9 +28520,9 @@ async function uploadFile(input, fileName, token) {
         const file = core.getInput('file');
         const fileStream = fs.createReadStream(file);
         formData.append('file', fileStream);
-        formData.append('filename', fileName);
+        // formData.append('filename', fileName)
         console.log(formData);
-        const response = await axios_1.default.post(input.upload_url, formData, {
+        const response = await axios_1.default.put(input.upload_url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`
