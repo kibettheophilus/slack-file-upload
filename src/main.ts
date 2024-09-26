@@ -45,7 +45,6 @@ async function getUploadUrl(token: string, fileName: string) {
     )
 
     await uploadFile(response.data, fileName, token)
-    console.log(response.data)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error)
   }
@@ -64,6 +63,11 @@ async function uploadFile(
 
     formData.append('file', fileStream as unknown as Blob)
     formData.append('filename', fileName)
+
+    console.log(input)
+    console.log(fileName)
+    console.log(file)
+    console.log(fileStream)
 
     const response = await axios.post(input.upload_url, formData, {
       headers: {
