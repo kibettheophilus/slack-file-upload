@@ -62,7 +62,8 @@ async function uploadFile(
     const file = core.getInput('file')
     const fileStream = fs.createReadStream(file)
 
-    formData.append(fileName, fileStream as unknown as Blob)
+    formData.append('file', fileStream as unknown as Blob)
+    formData.append('filename', fileName)
 
     const response = await axios.post(input.upload_url, formData, {
       headers: {
