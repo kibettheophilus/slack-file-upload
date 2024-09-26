@@ -71,7 +71,7 @@ async function uploadFile(
     })
     console.log(response.data)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error)
+    if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
