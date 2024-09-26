@@ -65,10 +65,7 @@ async function uploadFile(
     formData.append('file', fileStream as unknown as Blob)
     formData.append('filename', fileName)
 
-    console.log(input)
-    console.log(fileName)
-    console.log(file)
-    console.log(fileStream)
+    console.log(formData)
 
     const response = await axios.post(input.upload_url, formData, {
       headers: {

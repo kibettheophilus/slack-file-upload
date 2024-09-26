@@ -28521,10 +28521,7 @@ async function uploadFile(input, fileName, token) {
         const fileStream = fs.createReadStream(file);
         formData.append('file', fileStream);
         formData.append('filename', fileName);
-        console.log(input);
-        console.log(fileName);
-        console.log(file);
-        console.log(fileStream);
+        console.log(formData);
         const response = await axios_1.default.post(input.upload_url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
