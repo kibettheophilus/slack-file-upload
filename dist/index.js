@@ -28539,7 +28539,7 @@ async function uploadFile(input, fileName, token) {
 async function completeUpload(fileId) {
     try {
         const token = core.getInput('token');
-        const response = axios_1.default.post('https://slack.com/api/files.completeUploadExternal', {
+        const response = await axios_1.default.post('https://slack.com/api/files.completeUploadExternal', {
             files: [
                 {
                     id: fileId
