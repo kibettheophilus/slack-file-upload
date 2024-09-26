@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import axios, { AxiosResponse } from 'axios'
 import * as fs from 'fs'
 import FormData from 'form-data'
+import { config } from 'process'
 
 /**
  * The main function for the action.
@@ -74,6 +75,34 @@ async function uploadFile(
       }
     })
     console.log(response.data)
+    await completeUpload(input.file_id)
+  } catch (error) {
+    if (error instanceof Error) core.setFailed(error.message)
+  }
+}
+
+async function completeUpload(fileId: string) {
+  try {
+    const token = core.getInput('token')
+    const response = axios.post(
+      'https://slack.com/api/files.completeUploadExternal',
+      {
+        files: [
+          {
+            id: fileId
+          }
+        ],
+        channel_id: 'C01UGRVDRUG'
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    console.log(response)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

@@ -28529,6 +28529,30 @@ async function uploadFile(input, fileName, token) {
             }
         });
         console.log(response.data);
+        await completeUpload(input.file_id);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
+}
+async function completeUpload(fileId) {
+    try {
+        const token = core.getInput('token');
+        const response = axios_1.default.post('https://slack.com/api/files.completeUploadExternal', {
+            files: [
+                {
+                    id: fileId
+                }
+            ],
+            channel_id: 'C01UGRVDRUG'
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log(response);
     }
     catch (error) {
         if (error instanceof Error)
