@@ -53,7 +53,7 @@ jobs:
         id: test-action
         uses: ./
         with:
-          file: 'test.txt'
+          file: test.txt
           token: ${{ secrets.SLACK_TOKEN }}
           filename: 'test'
           channelId: 'C12345'
