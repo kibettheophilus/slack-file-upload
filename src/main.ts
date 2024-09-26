@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import axios, { AxiosResponse } from 'axios'
+import * as fs from 'fs'
 
 /**
  * The main function for the action.
@@ -22,8 +23,6 @@ export async function run(): Promise<void> {
     }
 
     await getUploadUrl(token, fileName)
-
-    console.log('Filed uploaded successfully')
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
@@ -45,7 +44,7 @@ async function getUploadUrl(token: string, fileName: string) {
       }
     )
 
-    await uploadFile(response.data, fileName, token, file)
+    await uploadFile(response.data, fileName, token)
     console.log(response.data)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error)
@@ -61,8 +60,9 @@ async function uploadFile(
     const formData = new FormData()
 
     const file = core.getInput('file')
+    const fileStream = fs.createReadStream(file)
 
-    formData.append(fileName, file)
+    formData.append(fileName, fileStream as unknown as Blob)
 
     const response = await axios.post(input.upload_url, formData, {
       headers: {

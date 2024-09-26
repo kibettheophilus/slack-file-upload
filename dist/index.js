@@ -28468,6 +28468,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = run;
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
+const fs = __importStar(__nccwpck_require__(7147));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -28486,15 +28487,14 @@ async function run() {
         if (!fileName) {
             core.setFailed('You must provide `filename` in your configuration');
         }
-        await getUploadUrl(token, fileName, uploadFile);
-        console.log('Filed uploaded successfully');
+        await getUploadUrl(token, fileName);
     }
     catch (error) {
         if (error instanceof Error)
             core.setFailed(error.message);
     }
 }
-async function getUploadUrl(token, fileName, file) {
+async function getUploadUrl(token, fileName) {
     try {
         const response = await axios_1.default.get('https://slack.com/api/files.getUploadURLExternal', {
             headers: {
@@ -28506,7 +28506,7 @@ async function getUploadUrl(token, fileName, file) {
                 length: 53072
             }
         });
-        await uploadFile(response.data, fileName, token, file);
+        await uploadFile(response.data, fileName, token);
         console.log(response.data);
     }
     catch (error) {
@@ -28514,10 +28514,12 @@ async function getUploadUrl(token, fileName, file) {
             core.setFailed(error);
     }
 }
-async function uploadFile(input, fileName, token, file) {
+async function uploadFile(input, fileName, token) {
     try {
         const formData = new FormData();
-        formData.append(fileName, file);
+        const file = core.getInput('file');
+        const fileStream = fs.createReadStream(file);
+        formData.append(fileName, fileStream);
         const response = await axios_1.default.post(input.upload_url, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
