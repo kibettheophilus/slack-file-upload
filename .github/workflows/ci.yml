@@ -46,13 +46,16 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
+      - name: Create file
+        run: echo "Test file" > test.txt
+
       - name: Test Local Action
         id: test-action
         uses: ./
         with:
-          file: 'artifact/to/upload'
+          file: test.txt
           token: ${{ secrets.SLACK_TOKEN }}
-          filename: 'filename'
+          filename: 'test'
           channelId: 'C12345'
           message: 'This is a file'
 

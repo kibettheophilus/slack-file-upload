@@ -28468,6 +28468,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = run;
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
+const fs = __importStar(__nccwpck_require__(7147));
+const form_data_1 = __importDefault(__nccwpck_require__(4334));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -28480,12 +28482,15 @@ async function run() {
         if (!uploadFile) {
             core.setFailed('You must provide `file` in your configuration');
         }
-        getUploadUrl(token, fileName);
-        core.setOutput('success', 'File uploaded to channelName');
-        console.log('Filed uploaded successfully');
+        if (!token) {
+            core.setFailed('You must provide `token` in your configuration');
+        }
+        if (!fileName) {
+            core.setFailed('You must provide `filename` in your configuration');
+        }
+        await getUploadUrl(token, fileName);
     }
     catch (error) {
-        // Fail the workflow run if an error occurs
         if (error instanceof Error)
             core.setFailed(error.message);
     }
@@ -28502,10 +28507,56 @@ async function getUploadUrl(token, fileName) {
                 length: 53072
             }
         });
-        console.log(response.data);
+        await uploadFile(response.data, fileName, token);
     }
     catch (error) {
-        console.log('Error fetching url:', error);
+        if (error instanceof Error)
+            core.setFailed(error);
+    }
+}
+async function uploadFile(input, fileName, token) {
+    try {
+        const formData = new form_data_1.default();
+        const file = core.getInput('file');
+        const fileStream = fs.createReadStream(file);
+        formData.append('file', fileStream);
+        // formData.append('filename', fileName)
+        console.log(formData);
+        const response = await axios_1.default.put(input.upload_url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        });
+        // console.log(response.data)
+        await completeUpload(input.file_id);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
+}
+async function completeUpload(fileId) {
+    try {
+        const token = core.getInput('token');
+        const response = await axios_1.default.post('https://slack.com/api/files.completeUploadExternal', {
+            files: [
+                {
+                    id: fileId
+                }
+            ],
+            channel_id: 'C01UGRVDRUG'
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log(response);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
     }
 }
 

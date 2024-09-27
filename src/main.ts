@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import * as fs from 'fs'
+import FormData from 'form-data'
+import { config } from 'process'
 
 /**
  * The main function for the action.
@@ -14,20 +17,22 @@ export async function run(): Promise<void> {
     if (!uploadFile) {
       core.setFailed('You must provide `file` in your configuration')
     }
+    if (!token) {
+      core.setFailed('You must provide `token` in your configuration')
+    }
+    if (!fileName) {
+      core.setFailed('You must provide `filename` in your configuration')
+    }
 
-    getUploadUrl(token, fileName)
-
-    core.setOutput('success', 'File uploaded to channelName')
-    console.log('Filed uploaded successfully')
+    await getUploadUrl(token, fileName)
   } catch (error) {
-    // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
 async function getUploadUrl(token: string, fileName: string) {
   try {
-    const response = await axios.get(
+    const response = await axios.get<GetUploadRes>(
       'https://slack.com/api/files.getUploadURLExternal',
       {
         headers: {
@@ -40,8 +45,71 @@ async function getUploadUrl(token: string, fileName: string) {
         }
       }
     )
-    console.log(response.data)
+
+    await uploadFile(response.data, fileName, token)
   } catch (error) {
-    console.log('Error fetching url:', error)
+    if (error instanceof Error) core.setFailed(error)
   }
+}
+
+async function uploadFile(
+  input: GetUploadRes,
+  fileName: string,
+  token: string
+) {
+  try {
+    const formData = new FormData()
+
+    const file = core.getInput('file')
+    const fileStream = fs.createReadStream(file)
+
+    formData.append('file', fileStream as unknown as Blob)
+    // formData.append('filename', fileName)
+
+    console.log(formData)
+
+    const response = await axios.put(input.upload_url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`
+      }
+    })
+    // console.log(response.data)
+    await completeUpload(input.file_id)
+  } catch (error) {
+    if (error instanceof Error) core.setFailed(error.message)
+  }
+}
+
+async function completeUpload(fileId: string) {
+  try {
+    const token = core.getInput('token')
+    const response = await axios.post(
+      'https://slack.com/api/files.completeUploadExternal',
+      {
+        files: [
+          {
+            id: fileId
+          }
+        ],
+        channel_id: 'C01UGRVDRUG'
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    console.log(response)
+  } catch (error) {
+    if (error instanceof Error) core.setFailed(error.message)
+  }
+}
+
+interface GetUploadRes {
+  ok: boolean
+  upload_url: string
+  file_id: string
 }
