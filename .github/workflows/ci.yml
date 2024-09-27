@@ -52,6 +52,7 @@ jobs:
       - name: Test Local Action
         id: test-action
         uses: ./
+
         with:
           file: test.txt
           token: ${{ secrets.SLACK_TOKEN }}
