@@ -28433,6 +28433,24 @@ exports["default"] = _default;
 
 /***/ }),
 
+/***/ 6373:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const { SLACK_GET_FILE_UPLOAD_URL, SLACK_COMPLETE_FILE_UPLOAD_URL } = process.env;
+if (!SLACK_GET_FILE_UPLOAD_URL || !SLACK_COMPLETE_FILE_UPLOAD_URL) {
+    process.exit(1);
+}
+exports["default"] = {
+    SLACK_GET_FILE_UPLOAD_URL,
+    SLACK_COMPLETE_FILE_UPLOAD_URL
+};
+
+
+/***/ }),
+
 /***/ 399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28470,6 +28488,8 @@ const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const fs = __importStar(__nccwpck_require__(7147));
 const form_data_1 = __importDefault(__nccwpck_require__(4334));
+const util_1 = __importDefault(__nccwpck_require__(2629));
+const config_1 = __importDefault(__nccwpck_require__(6373));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -28497,24 +28517,15 @@ async function run() {
 }
 async function getUploadUrl(token, fileName) {
     try {
-        const response = await axios_1.default.get('https://slack.com/api/files.getUploadURLExternal', {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            params: {
-                filename: fileName,
-                length: 53072
-            }
-        });
-        await uploadFile(response.data, fileName, token);
+        const response = await (0, util_1.default)(token, fileName, 53072, config_1.default.SLACK_GET_FILE_UPLOAD_URL, 'GET');
+        uploadFile(response.upload_url, response.file_id, fileName, token);
     }
     catch (error) {
         if (error instanceof Error)
             core.setFailed(error);
     }
 }
-async function uploadFile(input, fileName, token) {
+async function uploadFile(upload_url, file_id, fileName, token) {
     try {
         const formData = new form_data_1.default();
         const file = core.getInput('file');
@@ -28522,14 +28533,14 @@ async function uploadFile(input, fileName, token) {
         formData.append('file', fileStream);
         // formData.append('filename', fileName)
         console.log(formData);
-        const response = await axios_1.default.put(input.upload_url, formData, {
+        const response = await axios_1.default.put(upload_url, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`
             }
         });
         // console.log(response.data)
-        await completeUpload(input.file_id);
+        await completeUpload(file_id);
     }
     catch (error) {
         if (error instanceof Error)
@@ -28557,6 +28568,42 @@ async function completeUpload(fileId) {
     catch (error) {
         if (error instanceof Error)
             core.setFailed(error.message);
+    }
+}
+
+
+/***/ }),
+
+/***/ 2629:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports["default"] = APICall;
+async function APICall(token, fileName, fileLength, url, method) {
+    const config = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        params: {
+            filename: fileName,
+            length: fileLength
+        }
+    };
+    try {
+        const response = await fetch(url, config);
+        console.log(response);
+        const result = {
+            ok: response.ok
+        };
+        return result;
+    }
+    catch (err) {
+        const error = err;
+        throw Error(error.message);
     }
 }
 
