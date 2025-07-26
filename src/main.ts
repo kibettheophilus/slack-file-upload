@@ -66,9 +66,12 @@ async function uploadFile(
     formData.append('file', fileStream as unknown as Blob)
     // formData.append('filename', fileName)
 
-    console.log(formData)
+    // console.log(formData)
+    console.log(input.upload_url)
 
     const response = await axios.put(input.upload_url, formData, {
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`
@@ -92,7 +95,7 @@ async function completeUpload(fileId: string) {
             id: fileId
           }
         ],
-        channel_id: 'C01UGRVDRUG'
+        channel_id: core.getInput('channelId')
       },
       {
         headers: {
