@@ -69,6 +69,8 @@ async function uploadFile(
     console.log(formData)
 
     const response = await axios.put(input.upload_url, formData, {
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`
