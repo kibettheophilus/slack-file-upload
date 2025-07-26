@@ -92,7 +92,7 @@ async function completeUpload(fileId: string) {
             id: fileId
           }
         ],
-        channel_id: 'C01UGRVDRUG'
+        channel_id: core.getInput('channelId')
       },
       {
         headers: {
