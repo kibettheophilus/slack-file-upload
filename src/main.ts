@@ -66,7 +66,8 @@ async function uploadFile(
     formData.append('file', fileStream as unknown as Blob)
     // formData.append('filename', fileName)
 
-    console.log(formData)
+    // console.log(formData)
+    console.log(input.upload_url)
 
     const response = await axios.put(input.upload_url, formData, {
       maxContentLength: Infinity,
