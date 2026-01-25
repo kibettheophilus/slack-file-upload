@@ -2,7 +2,8 @@ import * as core from '@actions/core'
 import axios, { AxiosResponse } from 'axios'
 import * as fs from 'fs'
 import FormData from 'form-data'
-import { config } from 'process'
+import APICall from './util'
+import config from './config'
 
 /**
  * The main function for the action.
@@ -32,28 +33,22 @@ export async function run(): Promise<void> {
 
 async function getUploadUrl(token: string, fileName: string) {
   try {
-    const response = await axios.get<GetUploadRes>(
-      'https://slack.com/api/files.getUploadURLExternal',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        params: {
-          filename: fileName,
-          length: 53072
-        }
-      }
+    const response = await APICall(
+      token,
+      fileName,
+      53072,
+      config.SLACK_GET_FILE_UPLOAD_URL,
+      'GET'
     )
-
-    await uploadFile(response.data, fileName, token)
+    uploadFile(response.upload_url!, response.file_id!, fileName, token)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error)
   }
 }
 
 async function uploadFile(
-  input: GetUploadRes,
+  upload_url: string,
+  file_id: string,
   fileName: string,
   token: string
 ) {
@@ -68,14 +63,14 @@ async function uploadFile(
 
     console.log(formData)
 
-    const response = await axios.put(input.upload_url, formData, {
+    const response = await axios.put(upload_url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`
       }
     })
     // console.log(response.data)
-    await completeUpload(input.file_id)
+    await completeUpload(file_id)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
